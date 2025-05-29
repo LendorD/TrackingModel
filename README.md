@@ -4,7 +4,7 @@
   ## Для обучения 
   - python game.py --train
   ## Для запуска
-  - python game.py --run
+  - python game.py --game
 # Трекинг пальцев
   ## Для сбора фоток
   - python finger_counter.py --capture
