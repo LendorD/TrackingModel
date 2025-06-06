@@ -83,9 +83,8 @@ class NeuralNetworkGradientDescent:
     def relu_derivative(self, x):
         return (x > 0).astype(float)
 
-    # Вычисление градиентов методом обратного распространения
+    # Вычисление градиентов
     def compute_gradients(self, X, y):
-        """Вычисление градиентов методом обратного распространения"""
         m = y.shape[0]
         grads_w = [np.zeros_like(w) for w in self.weights]
         grads_b = [np.zeros_like(b) for b in self.biases]
@@ -154,16 +153,12 @@ class NeuralNetworkGradientDescent:
                 end = min(start + batch_size, X_train.shape[0])
                 X_batch = X_train[start:end]
                 y_batch = y_train[start:end]
-
                 # Прямое распространение
                 self.forward(X_batch)
-
                 # Вычисление градиентов
                 grads_w, grads_b = self.compute_gradients(X_batch, y_batch)
-
                 # Применение градиентного спуска
                 self.apply_gradient_descent(grads_w, grads_b)
-
                 # Расчет потерь
                 batch_loss = self.compute_loss(y_batch)
                 if not np.isnan(batch_loss):
@@ -198,7 +193,7 @@ class NeuralNetworkGradientDescent:
                     break
 
             # Дополнительное условие остановки
-            if val_acc >= 95.0:
+            if val_acc >= 95.0 and epoch >= 150:
                 print(f"Target accuracy of 95% reached at epoch {epoch}")
                 break
 
@@ -264,7 +259,7 @@ class RockPaperScissorsGame:
         self.gesture_names = ["Rock", "Paper", "Scissors"]
         self.history = deque(maxlen=5)  # История последних игр
 
-    def train_model(self, data_dir="rps_data", save_path="rps_model_gradient.pkl"):
+    def train_model(self, data_dir="rps_data", save_path="rps_model_back.pkl"):
         print("Загрузка данных для обучения...")
         X, y = ImageProcessor.load_training_data(data_dir)
         print(f"Загружено {X.shape[0]} образцов")
@@ -483,8 +478,8 @@ class RockPaperScissorsGame:
         cap.release()
         cv2.destroyAllWindows()
 
+
 class ImageProcessor:
-    @staticmethod
     @staticmethod
     def preprocess_image(image, size=(64, 64), max_hands=2):
         # Конвертация в YCrCb
@@ -561,7 +556,7 @@ class ImageProcessor:
         return hands, bboxes, skin_mask
 
     @staticmethod
-    def capture_training_data(output_dir="training_data", classes=6, samples_per_class=100):
+    def capture_training_data(output_dir="training_data", classes=3, samples_per_class=100):
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
@@ -571,8 +566,6 @@ class ImageProcessor:
             return
 
         print("Сбор данных для обучения:")
-        print("0: Кулак (0 пальцев)")
-        print("1-5: Количество пальцев")
         print("Нажмите 'c' для захвата изображения")
         print("Нажмите 'q' для завершения")
 
@@ -704,7 +697,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.capture:
-        ImageProcessor.capture_training_data(output_dir="rps_data", classes=3, samples_per_class=200)
+        ImageProcessor.capture_training_data(output_dir="rps_data", classes=3, samples_per_class=500)
 
     if args.train:
         game = RockPaperScissorsGame()

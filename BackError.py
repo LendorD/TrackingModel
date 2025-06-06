@@ -81,7 +81,6 @@ class NeuralNetworkBackprop:
 
     # Обратное распространение ошибки
     def backward(self, X, y):
-        """Вычисление градиентов и обновление весов"""
         m = y.shape[0]
         grads_w = [np.zeros_like(w) for w in self.weights]
         grads_b = [np.zeros_like(b) for b in self.biases]
@@ -460,7 +459,6 @@ class RockPaperScissorsGame:
         cv2.destroyAllWindows()
 
 class ImageProcessor:
-    @staticmethod
     @staticmethod
     def preprocess_image(image, size=(64, 64), max_hands=2):
         # Конвертация в YCrCb
